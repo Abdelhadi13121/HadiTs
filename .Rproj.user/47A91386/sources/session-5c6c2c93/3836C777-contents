@@ -1,0 +1,15 @@
+Package: HadiTs
+Title: Time Series Stationarity Tests
+Version: 0.0.0.9000
+Authors@R: person("YourFirst", "YourLast", email = "your@email.com", role = c("aut", "cre"))
+Description: Tools for testing time series stationarity.
+License: MIT
+Encoding: UTF-8
+Imports:
+    fpp3,
+    purrr,
+    dplyr,
+    tidyr,
+    tibble,
+    tsibble
+RoxygenNote: 7.3.2
