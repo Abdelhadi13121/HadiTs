@@ -18,7 +18,7 @@ check_stationarity <- function(data, vars = NULL) {
       }
    }
 
-   # Load namespaces
+   # Load required packages
    library(purrr)
    library(fpp3)
 
@@ -61,4 +61,25 @@ check_stationarity <- function(data, vars = NULL) {
    }
 
    results <- purrr::map_dfr(vars, function(var) {
-      vec <- stats:
+      vec <- stats::na.omit(data_tbl[[var]])
+
+      pp_level <- run_test(vec, "PP") %>% dplyr::mutate(test = "PP", difference = "Level")
+      kpss_level <- run_test(vec, "KPSS") %>% dplyr::mutate(test = "KPSS", difference = "Level")
+      base_row <- dplyr::bind_rows(pp_level, kpss_level) %>% dplyr::mutate(variable = var)
+
+      need_diff <- any(base_row$conclusion == "Non-stationary")
+
+      if (need_diff && length(vec) > 1) {
+         vec_diff <- diff(vec)
+         pp_diff <- run_test(vec_diff, "PP") %>% dplyr::mutate(test = "PP", difference = "First Diff")
+         kpss_diff <- run_test(vec_diff, "KPSS") %>% dplyr::mutate(test = "KPSS", difference = "First Diff")
+         diff_rows <- dplyr::bind_rows(pp_diff, kpss_diff) %>% dplyr::mutate(variable = var)
+         dplyr::bind_rows(base_row, diff_rows)
+      } else {
+         base_row
+      }
+   }) %>%
+      dplyr::select(variable, difference, test, statistic, p_value, conclusion)
+
+   return(results)
+}
