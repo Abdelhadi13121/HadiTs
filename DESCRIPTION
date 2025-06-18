@@ -6,10 +6,11 @@ Description: Tools for testing time series stationarity.
 License: MIT
 Encoding: UTF-8
 Imports:
-    fpp3,
-    purrr,
     dplyr,
-    tidyr,
+    purrr,
     tibble,
-    tsibble
+    tsibble,
+    fabletools,
+    feasts,
+    magrittr
 RoxygenNote: 7.3.2
